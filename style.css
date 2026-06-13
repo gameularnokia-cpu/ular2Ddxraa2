@@ -53,15 +53,37 @@ margin:5px;
 
 padding:12px;
 
-font-size:20px;
+font-size:22px;
 
 background:#ff4da6;
+
+color:white;
 
 border:0;
 
 border-radius:10px;
 
 }
+
+
+.joystick button{
+
+
+width:85px;
+
+height:65px;
+
+font-size:38px;
+
+margin:6px;
+
+
+box-shadow:
+0 0 15px #ff4da6;
+
+
+}
+
 
 
 #message{
@@ -73,8 +95,8 @@ color:#ff4da6;
 }
 
 
-.joystick{
+p{
 
-margin-top:15px;
+color:#ccc;
 
 }
