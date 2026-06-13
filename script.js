@@ -150,19 +150,78 @@ endGame();
 function spawnApple(){
 
 
-while(apples.length<10){
+apples.forEach(a=>{
+
+
+// kulit semangka
+ctx.fillStyle="#00aa44";
+
+
+ctx.beginPath();
+
+ctx.arc(
+
+a.x*20+10,
+
+a.y*20+10,
+
+9,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
 
 
 
-let a={
+// bagian merah semangka
+ctx.fillStyle="#ff3366";
 
-x:
-Math.floor(Math.random()*grid),
 
-y:
-Math.floor(Math.random()*grid)
+ctx.beginPath();
 
-};
+ctx.arc(
+
+a.x*20+10,
+
+a.y*20+10,
+
+6,
+
+0,
+
+Math.PI*2
+
+);
+
+ctx.fill();
+
+
+
+// biji
+ctx.fillStyle="#111";
+
+
+ctx.fillRect(
+a.x*20+8,
+a.y*20+8,
+2,
+2
+);
+
+
+ctx.fillRect(
+a.x*20+12,
+a.y*20+11,
+2,
+2
+);
+
+
+});
 
 
 
