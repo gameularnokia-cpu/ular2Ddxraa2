@@ -1,6 +1,7 @@
 const canvas =
 document.getElementById("canvas");
 
+
 const ctx =
 canvas.getContext("2d");
 
@@ -9,44 +10,43 @@ canvas.getContext("2d");
 const scoreText =
 document.getElementById("score");
 
+
 const timeText =
 document.getElementById("time");
 
+
 const highText =
 document.getElementById("high");
+
 
 const message =
 document.getElementById("message");
 
 
-
-const startBtn =
+const start =
 document.getElementById("start");
 
 
 
-const size=20;
-
 const grid=20;
 
 
+let snake=[];
 
-let snake;
-
-let apples=[];
-
-
-let dx;
-
-let dy;
+let fruits=[];
 
 
-let score;
+let dx=1;
 
-let time;
+let dy=0;
 
 
-let running=false;
+let score=0;
+
+let time=90;
+
+
+let speed;
 
 
 let timer;
@@ -54,18 +54,19 @@ let timer;
 let clock;
 
 
+let running=false;
+
+
 
 const startSpeed=120;
 
-let speed;
 
 
+let high =
+Number(localStorage.getItem("snakeHigh")) || 0;
 
-let highScore =
-Number(localStorage.getItem("high")) || 0;
 
-
-highText.innerHTML=highScore;
+highText.innerHTML=high;
 
 
 
@@ -78,11 +79,12 @@ snake=[
 ];
 
 
+fruits=[];
+
+
 dx=1;
+
 dy=0;
-
-
-apples=[];
 
 
 score=0;
@@ -96,12 +98,11 @@ speed=startSpeed;
 running=true;
 
 
-
 message.innerHTML="";
 
 
 
-spawnApple();
+spawnFruit();
 
 
 
@@ -111,29 +112,27 @@ clearInterval(clock);
 
 
 
-timer =
-setInterval(
+timer=setInterval(
 game,
 speed
 );
 
 
 
-clock =
-setInterval(()=>{
+clock=setInterval(()=>{
 
 
 time--;
+
 
 timeText.innerHTML=time;
 
 
 
-if(time<=0){
+if(time<=0)
 
 endGame();
 
-}
 
 
 },1000);
@@ -145,105 +144,39 @@ endGame();
 
 
 
-
-
-function spawnApple(){
-
-
-apples.forEach(a=>{
-
-
-// kulit semangka
-ctx.fillStyle="#00aa44";
-
-
-ctx.beginPath();
-
-ctx.arc(
-
-a.x*20+10,
-
-a.y*20+10,
-
-9,
-
-0,
-
-Math.PI*2
-
-);
-
-ctx.fill();
+function spawnFruit(){
 
 
 
-// bagian merah semangka
-ctx.fillStyle="#ff3366";
+while(fruits.length<10){
 
 
-ctx.beginPath();
+let f={
 
-ctx.arc(
+x:
+Math.floor(Math.random()*grid),
 
-a.x*20+10,
+y:
+Math.floor(Math.random()*grid)
 
-a.y*20+10,
-
-6,
-
-0,
-
-Math.PI*2
-
-);
-
-ctx.fill();
+};
 
 
+if(
+!snake.some(
+s=>s.x==f.x &&
+s.y==f.y
+)
 
-// biji
-ctx.fillStyle="#111";
+)
 
-
-ctx.fillRect(
-a.x*20+8,
-a.y*20+8,
-2,
-2
-);
-
-
-ctx.fillRect(
-a.x*20+12,
-a.y*20+11,
-2,
-2
-);
-
-
-});
-
-
-
-let same =
-snake.some(
-s=>
-s.x==a.x &&
-s.y==a.y
-);
-
-
-
-if(!same)
-apples.push(a);
-
+fruits.push(f);
 
 
 }
 
 
 }
-
 
 
 
@@ -253,15 +186,12 @@ apples.push(a);
 function game(){
 
 
-
 move();
 
 draw();
 
 
-
 }
-
 
 
 
@@ -282,11 +212,15 @@ y:snake[0].y+dy
 
 
 
+
 if(
 
 head.x<0 ||
+
 head.y<0 ||
+
 head.x>=grid ||
+
 head.y>=grid
 
 ){
@@ -300,43 +234,53 @@ return;
 
 
 
+
 snake.unshift(head);
 
 
 
-let hit =
-apples.findIndex(
-a=>
-a.x==head.x &&
-a.y==head.y
+
+
+let eat =
+fruits.findIndex(
+
+f=>
+
+f.x==head.x &&
+
+f.y==head.y
+
 );
 
 
 
-if(hit!=-1){
 
 
+if(eat!=-1){
 
-apples.splice(hit,1);
+
+fruits.splice(
+eat,
+1
+);
 
 
 
 score+=10;
 
 
-
 scoreText.innerHTML=score;
 
 
 
-
-// naik cepat 0.5%
+// speed +0.5%
 
 speed -= startSpeed*0.005;
 
 
 
 if(speed<40)
+
 speed=40;
 
 
@@ -344,15 +288,15 @@ speed=40;
 clearInterval(timer);
 
 
-timer =
-setInterval(
+
+timer=setInterval(
 game,
 speed
 );
 
 
 
-spawnApple();
+spawnFruit();
 
 
 
@@ -375,8 +319,8 @@ snake.pop();
 
 
 
-
 function draw(){
+
 
 
 ctx.clearRect(
@@ -385,15 +329,15 @@ ctx.clearRect(
 
 
 
-snake.forEach((s,i)=>{
+
+snake.forEach(
+(s,i)=>{
 
 
-if(i==0){
+if(i==0)
 
 drawHead(s);
 
-
-}
 
 else{
 
@@ -402,14 +346,20 @@ ctx.fillStyle="#ff4da6";
 
 
 ctx.fillRect(
+
 s.x*20,
+
 s.y*20,
+
 18,
+
 18
+
 );
 
 
 }
+
 
 
 });
@@ -417,38 +367,14 @@ s.y*20,
 
 
 
-apples.forEach(a=>{
 
-
-ctx.fillStyle="red";
-
-
-ctx.beginPath();
-
-
-ctx.arc(
-
-a.x*20+10,
-
-a.y*20+10,
-
-8,
-
-0,
-
-Math.PI*2
-
+fruits.forEach(
+drawFruit
 );
 
 
-ctx.fill();
-
-
-});
-
 
 }
-
 
 
 
@@ -459,12 +385,12 @@ function drawHead(p){
 
 ctx.fillStyle="#ff66b2";
 
-
 ctx.beginPath();
 
 
 
 if(dx==1){
+
 
 ctx.moveTo(
 p.x*20+20,
@@ -480,6 +406,7 @@ ctx.lineTo(
 p.x*20,
 p.y*20+20
 );
+
 
 }
 
@@ -488,66 +415,76 @@ p.y*20+20
 
 if(dx==-1){
 
+
 ctx.moveTo(
 p.x*20,
 p.y*20+10
 );
+
 
 ctx.lineTo(
 p.x*20+20,
 p.y*20
 );
 
+
 ctx.lineTo(
 p.x*20+20,
 p.y*20+20
 );
 
-}
 
+}
 
 
 
 
 if(dy==1){
 
+
 ctx.moveTo(
 p.x*20+10,
 p.y*20+20
 );
+
 
 ctx.lineTo(
 p.x*20,
 p.y*20
 );
 
+
 ctx.lineTo(
 p.x*20+20,
 p.y*20
 );
+
 
 }
 
 
 
 
-
 if(dy==-1){
+
 
 ctx.moveTo(
 p.x*20+10,
 p.y*20
 );
 
+
 ctx.lineTo(
 p.x*20,
 p.y*20+20
 );
 
+
 ctx.lineTo(
 p.x*20+20,
 p.y*20+20
 );
+
 
 }
 
@@ -567,6 +504,94 @@ ctx.fill();
 
 
 
+function drawFruit(f){
+
+
+// kulit semangka
+
+ctx.fillStyle="#00aa44";
+
+
+ctx.beginPath();
+
+
+ctx.arc(
+
+f.x*20+10,
+
+f.y*20+10,
+
+9,
+
+0,
+
+Math.PI*2
+
+);
+
+
+ctx.fill();
+
+
+
+// isi merah
+
+
+ctx.fillStyle="#ff3366";
+
+
+ctx.beginPath();
+
+
+ctx.arc(
+
+f.x*20+10,
+
+f.y*20+10,
+
+6,
+
+0,
+
+Math.PI*2
+
+);
+
+
+ctx.fill();
+
+
+
+// biji
+
+
+ctx.fillStyle="#111";
+
+
+ctx.fillRect(
+f.x*20+8,
+f.y*20+8,
+2,
+2
+);
+
+
+ctx.fillRect(
+f.x*20+12,
+f.y*20+11,
+2,
+2
+);
+
+
+}
+
+
+
+
+
+
+
 function endGame(){
 
 
@@ -579,21 +604,20 @@ clearInterval(clock);
 
 
 
-if(score>highScore){
+if(score>high){
 
 
-highScore=score;
+high=score;
 
 
 localStorage.setItem(
-"high",
-highScore
+"snakeHigh",
+high
 );
 
 
-
 message.innerHTML=
-"🏆 MENANG HIGH SCORE";
+"🏆 MENANG HIGH SCORE BARU";
 
 
 }
@@ -602,18 +626,16 @@ else{
 
 
 message.innerHTML=
-"KALAH";
+"GAME OVER - KALAH";
 
 
 }
 
 
-
-highText.innerHTML=highScore;
+highText.innerHTML=high;
 
 
 }
-
 
 
 
@@ -645,14 +667,12 @@ dy=1;
 }
 
 
-
 if(k=="a"||k=="arrowleft"){
 
 dx=-1;
 dy=0;
 
 }
-
 
 
 if(k=="d"||k=="arrowright"){
@@ -665,6 +685,7 @@ dy=0;
 
 
 });
+
 
 
 
@@ -699,7 +720,7 @@ right.onclick=
 
 
 
-startBtn.onclick=startGame;
+start.onclick=startGame;
 
 
 
@@ -708,6 +729,6 @@ snake=[
 ];
 
 
-spawnApple();
+spawnFruit();
 
 draw();
