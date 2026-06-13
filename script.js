@@ -23,15 +23,19 @@ const message =
 document.getElementById("message");
 
 
+
 const start =
 document.getElementById("start");
 
 
 
+const size=20;
+
 const grid=20;
 
 
-let snake=[];
+
+let snake;
 
 let fruits=[];
 
@@ -49,9 +53,9 @@ let time=90;
 let speed;
 
 
-let timer;
+let gameTimer;
 
-let clock;
+let timeTimer;
 
 
 let running=false;
@@ -83,7 +87,6 @@ fruits=[];
 
 
 dx=1;
-
 dy=0;
 
 
@@ -101,38 +104,36 @@ running=true;
 message.innerHTML="";
 
 
-
 spawnFruit();
 
 
 
-clearInterval(timer);
+clearInterval(gameTimer);
 
-clearInterval(clock);
+clearInterval(timeTimer);
 
 
 
-timer=setInterval(
+gameTimer =
+setInterval(
 game,
 speed
 );
 
 
 
-clock=setInterval(()=>{
+timeTimer =
+setInterval(()=>{
 
 
 time--;
 
-
 timeText.innerHTML=time;
-
 
 
 if(time<=0)
 
 endGame();
-
 
 
 },1000);
@@ -145,7 +146,6 @@ endGame();
 
 
 function spawnFruit(){
-
 
 
 while(fruits.length<10){
@@ -182,18 +182,13 @@ fruits.push(f);
 
 
 
-
 function game(){
-
 
 move();
 
 draw();
 
-
 }
-
-
 
 
 
@@ -216,11 +211,8 @@ y:snake[0].y+dy
 if(
 
 head.x<0 ||
-
 head.y<0 ||
-
 head.x>=grid ||
-
 head.y>=grid
 
 ){
@@ -234,10 +226,7 @@ return;
 
 
 
-
 snake.unshift(head);
-
-
 
 
 
@@ -245,25 +234,17 @@ let eat =
 fruits.findIndex(
 
 f=>
-
 f.x==head.x &&
-
 f.y==head.y
 
 );
 
 
 
-
-
 if(eat!=-1){
 
 
-fruits.splice(
-eat,
-1
-);
-
+fruits.splice(eat,1);
 
 
 score+=10;
@@ -273,10 +254,9 @@ scoreText.innerHTML=score;
 
 
 
-// speed +0.5%
+// cepat 0.5%
 
 speed -= startSpeed*0.005;
-
 
 
 if(speed<40)
@@ -285,11 +265,11 @@ speed=40;
 
 
 
-clearInterval(timer);
+clearInterval(gameTimer);
 
 
-
-timer=setInterval(
+gameTimer =
+setInterval(
 game,
 speed
 );
@@ -299,7 +279,6 @@ speed
 spawnFruit();
 
 
-
 }
 
 else{
@@ -307,12 +286,11 @@ else{
 
 snake.pop();
 
-
 }
 
 
-
 }
+
 
 
 
@@ -322,22 +300,18 @@ snake.pop();
 function draw(){
 
 
-
 ctx.clearRect(
 0,0,400,400
 );
 
 
 
-
-snake.forEach(
-(s,i)=>{
+snake.forEach((s,i)=>{
 
 
 if(i==0)
 
-drawHead(s);
-
+headDraw(s);
 
 else{
 
@@ -346,32 +320,23 @@ ctx.fillStyle="#ff4da6";
 
 
 ctx.fillRect(
-
 s.x*20,
-
 s.y*20,
-
 18,
-
 18
-
 );
 
 
 }
-
 
 
 });
 
 
 
-
-
 fruits.forEach(
-drawFruit
+fruitDraw
 );
-
 
 
 }
@@ -380,7 +345,8 @@ drawFruit
 
 
 
-function drawHead(p){
+
+function headDraw(p){
 
 
 ctx.fillStyle="#ff66b2";
@@ -391,7 +357,6 @@ ctx.beginPath();
 
 if(dx==1){
 
-
 ctx.moveTo(
 p.x*20+20,
 p.y*20+10
@@ -407,87 +372,70 @@ p.x*20,
 p.y*20+20
 );
 
-
 }
-
 
 
 
 if(dx==-1){
 
-
 ctx.moveTo(
 p.x*20,
 p.y*20+10
 );
 
-
 ctx.lineTo(
 p.x*20+20,
 p.y*20
 );
-
 
 ctx.lineTo(
 p.x*20+20,
 p.y*20+20
 );
 
-
 }
-
 
 
 
 if(dy==1){
 
-
 ctx.moveTo(
 p.x*20+10,
 p.y*20+20
 );
-
 
 ctx.lineTo(
 p.x*20,
 p.y*20
 );
 
-
 ctx.lineTo(
 p.x*20+20,
 p.y*20
 );
 
-
 }
-
 
 
 
 if(dy==-1){
 
-
 ctx.moveTo(
 p.x*20+10,
 p.y*20
 );
-
 
 ctx.lineTo(
 p.x*20,
 p.y*20+20
 );
 
-
 ctx.lineTo(
 p.x*20+20,
 p.y*20+20
 );
 
-
 }
-
 
 
 ctx.closePath();
@@ -502,39 +450,26 @@ ctx.fill();
 
 
 
+function fruitDraw(f){
 
 
-function drawFruit(f){
-
-
-// kulit semangka
-
-ctx.fillStyle="#00aa44";
+ctx.fillStyle="#009933";
 
 
 ctx.beginPath();
 
 
 ctx.arc(
-
 f.x*20+10,
-
 f.y*20+10,
-
 9,
-
 0,
-
 Math.PI*2
-
 );
 
 
 ctx.fill();
 
-
-
-// isi merah
 
 
 ctx.fillStyle="#ff3366";
@@ -544,25 +479,15 @@ ctx.beginPath();
 
 
 ctx.arc(
-
 f.x*20+10,
-
 f.y*20+10,
-
 6,
-
 0,
-
 Math.PI*2
-
 );
 
 
 ctx.fill();
-
-
-
-// biji
 
 
 ctx.fillStyle="#111";
@@ -571,14 +496,6 @@ ctx.fillStyle="#111";
 ctx.fillRect(
 f.x*20+8,
 f.y*20+8,
-2,
-2
-);
-
-
-ctx.fillRect(
-f.x*20+12,
-f.y*20+11,
 2,
 2
 );
@@ -598,9 +515,9 @@ function endGame(){
 running=false;
 
 
-clearInterval(timer);
+clearInterval(gameTimer);
 
-clearInterval(clock);
+clearInterval(timeTimer);
 
 
 
@@ -617,7 +534,7 @@ high
 
 
 message.innerHTML=
-"🏆 MENANG HIGH SCORE BARU";
+"🏆 MENANG";
 
 
 }
@@ -626,7 +543,7 @@ else{
 
 
 message.innerHTML=
-"GAME OVER - KALAH";
+"KALAH";
 
 
 }
@@ -683,19 +600,15 @@ dy=0;
 }
 
 
-
 });
 
 
 
 
 
-
-
-function moveControl(x,y){
+function control(x,y){
 
 dx=x;
-
 dy=y;
 
 }
@@ -703,19 +616,20 @@ dy=y;
 
 
 up.onclick=
-()=>moveControl(0,-1);
+()=>control(0,-1);
 
 
 down.onclick=
-()=>moveControl(0,1);
+()=>control(0,1);
 
 
 left.onclick=
-()=>moveControl(-1,0);
+()=>control(-1,0);
 
 
 right.onclick=
-()=>moveControl(1,0);
+()=>control(1,0);
+
 
 
 
