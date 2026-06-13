@@ -5,9 +5,7 @@ margin:0;
 height:100vh;
 
 display:flex;
-
 justify-content:center;
-
 align-items:center;
 
 background:#111;
@@ -31,9 +29,11 @@ border:4px solid #ff4da6;
 
 border-radius:15px;
 
-box-shadow:0 0 25px pink;
+box-shadow:
+0 0 25px pink;
 
 }
+
 
 
 canvas{
@@ -47,11 +47,12 @@ image-rendering:pixelated;
 }
 
 
+
 button{
 
-margin:5px;
+padding:12px 20px;
 
-padding:12px;
+margin:5px;
 
 font-size:22px;
 
@@ -66,25 +67,6 @@ border-radius:10px;
 }
 
 
-.joystick button{
-
-
-width:85px;
-
-height:65px;
-
-font-size:38px;
-
-margin:6px;
-
-
-box-shadow:
-0 0 15px #ff4da6;
-
-
-}
-
-
 
 #message{
 
@@ -95,8 +77,41 @@ color:#ff4da6;
 }
 
 
-p{
 
-color:#ccc;
+.joystick{
+
+display:none;
+
+}
+
+
+
+/* hanya HP */
+
+@media(max-width:700px){
+
+
+.joystick{
+
+display:block;
+
+margin-top:15px;
+
+}
+
+
+
+.joystick button{
+
+width:85px;
+
+height:65px;
+
+font-size:38px;
+
+margin:6px;
+
+}
+
 
 }
